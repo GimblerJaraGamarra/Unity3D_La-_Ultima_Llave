@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -13,8 +12,11 @@ public class UIController : MonoBehaviour
 
     public Text lifeText;
     public Text bulletText;
+    public Text keyText;
 
     public Button resetBtn;
+
+    public GameObject bloodPanel;
 
     private void Awake()
     {
@@ -29,15 +31,24 @@ public class UIController : MonoBehaviour
         });
     }
 
+    public void ActiveBloodPanel(bool state)
+    {
+        bloodPanel.SetActive(state);
+    }
 
     public void UpdateLifePlayer(int life)
     {
         lifeText.text = life.ToString();
     }
 
-    public void UpdateBullet(int bullet)
+    public void UpdateAmountBullet(int bullet)
     {
         bulletText.text = bullet.ToString();
+    }
+
+    public void UpdateAmountKey(int amount)
+    {
+        keyText.text = amount.ToString();
     }
 
     public void ActivePanelFinishGame()

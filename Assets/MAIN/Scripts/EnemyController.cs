@@ -13,6 +13,8 @@ public class EnemyController : MonoBehaviour
     public Animator animatorEnemy;
     private int lifeEnemy;
 
+    public AudioSource effectWalking;
+
     [Header("SOUND")]
     // public AudioClip audioClipEnemyEating;
 
@@ -32,21 +34,32 @@ public class EnemyController : MonoBehaviour
 
     void MovementEnemy()
     {
-        float distanceToPlayer = Vector3.Distance(player.transform.position, transform.position);
-
-        transform.LookAt(player.transform);
-
-        if (distanceToPlayer < 0.1f)
+        if (!Gamecontroller.instance.finishGame)
         {
-            animatorEnemy.SetBool("shoot", true);
-            agent.isStopped = true;
+            float distanceToPlayer = Vector3.Distance(player.transform.position, transform.position);
+
+            transform.LookAt(player.transform);
+
+            if (distanceToPlayer < 0.1f)
+            {
+                animatorEnemy.SetBool("shoot", true);
+                agent.isStopped = true;
+            }
+            else
+            {
+                animatorEnemy.SetBool("shoot", false);
+                agent.destination = player.transform.position;
+                agent.isStopped = false;
+
+            }
         }
         else
         {
-            animatorEnemy.SetBool("shoot", false);
-            agent.destination = player.transform.position;
-            agent.isStopped = false;
-
+            agent.isStopped = true;
+            animatorEnemy.SetBool("IsDead", true);
+            effectWalking.Stop();
+            gameObject.GetComponent<EnemyController>().enabled = false;
+            gameObject.GetComponent<CapsuleCollider>().enabled = false;
         }
 
     }
@@ -63,12 +76,10 @@ public class EnemyController : MonoBehaviour
             {
                 animatorEnemy.SetBool("IsDead", true);
                 agent.isStopped = true;
-                Debug.Log("vida actual: " + lifeEnemy);
+                effectWalking.Stop();
                 gameObject.GetComponent<EnemyController>().enabled = false;
                 gameObject.GetComponent<CapsuleCollider>().enabled = false;
                 Destroy(gameObject.GetComponent<Rigidbody>());
-                PlayerMovement.Instance.amountBullet += 15;
-                UIController.instance.UpdateBullet(PlayerMovement.Instance.amountBullet);
                 Destroy(gameObject, 5);
             }
         }
