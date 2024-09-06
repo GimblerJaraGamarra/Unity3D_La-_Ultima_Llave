@@ -47,6 +47,7 @@ public class Gamecontroller : MonoBehaviour
         InstanciateKeys();
         audioSourceGameController.PlayOneShot(audioEnvironment);
         UIController.instance.UpdateAmountKey(amountsKey);
+        UIController.instance.UpdateTargetAmountKey(totalAmountKeys);
     }
 
     // Update is called once per frame
@@ -57,6 +58,7 @@ public class Gamecontroller : MonoBehaviour
 
     public void OpenDoor()
     {
+        audioSourceGameController.volume = 0.8f;
         audioSourceGameController.PlayOneShot(openDoorAudioAudio);
         exitDoorAnimator.SetBool("openDoor", true);
     }
@@ -70,7 +72,7 @@ public class Gamecontroller : MonoBehaviour
             var enemyclone = Instantiate(enemyPrefab[index], coodenada.position, Quaternion.identity);
         }
 
-        Invoke("CreateEnemies", Random.Range(3, 6));
+        Invoke("CreateEnemies", Random.Range(2, 4));
     }
 
     void InstanciateBullets()
@@ -91,10 +93,10 @@ public class Gamecontroller : MonoBehaviour
         {
             var coodenada = spawnsKeyCreate[Random.Range(0, spawnsKeyCreate.Count)];
             var key = Instantiate(keyPrefab, coodenada.position, Quaternion.identity);
-            Destroy(key, 25f);
+            Destroy(key, 30f);
         }
 
-        Invoke("InstanciateKeys", 35);
+        Invoke("InstanciateKeys", 25);
     }
 }
 

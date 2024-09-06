@@ -90,6 +90,26 @@ public class EnemyController : MonoBehaviour
         }
     }
 
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.CompareTag("Bomb"))
+        {
+            Destroy(other.gameObject);
+            lifeEnemy -= 5;
+
+            if (lifeEnemy <= 0)
+            {
+                animatorEnemy.SetBool("IsDead", true);
+                agent.isStopped = true;
+                effectWalking.Stop();
+                gameObject.GetComponent<EnemyController>().enabled = false;
+                gameObject.GetComponent<CapsuleCollider>().enabled = false;
+                Destroy(gameObject.GetComponent<Rigidbody>());
+                Destroy(gameObject, 5);
+            }
+        }
+    }
+
     private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Player"))

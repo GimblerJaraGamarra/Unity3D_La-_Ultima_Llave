@@ -8,13 +8,17 @@ public class UIController : MonoBehaviour
 
     public static UIController instance;
 
-    public GameObject finishGamePanel;
+    [Header("GAME PANEL")]
+    public Text targetKeyText;
+    public Text amountKeyText;
 
-    public Text lifeText;
     public Text bulletText;
-    public Text keyText;
 
+    public Image lifePlayerSlider;
+
+    public GameObject finishGamePanel;
     public Button resetBtn;
+
 
     public GameObject bloodPanel;
 
@@ -36,9 +40,10 @@ public class UIController : MonoBehaviour
         bloodPanel.SetActive(state);
     }
 
-    public void UpdateLifePlayer(int life)
+    public void UpdateLifePlayer(float life)
     {
-        lifeText.text = life.ToString();
+
+        lifePlayerSlider.fillAmount = life;
     }
 
     public void UpdateAmountBullet(int bullet)
@@ -48,7 +53,12 @@ public class UIController : MonoBehaviour
 
     public void UpdateAmountKey(int amount)
     {
-        keyText.text = amount.ToString();
+        amountKeyText.text = amount.ToString();
+    }
+
+    public void UpdateTargetAmountKey(int amount)
+    {
+        targetKeyText.text = amount.ToString();
     }
 
     public void ActivePanelFinishGame()

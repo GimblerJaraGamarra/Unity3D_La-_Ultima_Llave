@@ -9,6 +9,8 @@ TagManager:
   - Bullets
   - key
   - exitdoor
+  - Bomb
+  - Ground
   layers:
   - Default
   - TransparentFX

@@ -29,7 +29,7 @@ public class PlayerMovement : MonoBehaviour
 
 
     [Header("LIFE")]
-    public int lifePlayer;
+    public float lifePlayer;
 
     [Header("SOUNDS")]
     public AudioClip shootSound;
@@ -41,6 +41,7 @@ public class PlayerMovement : MonoBehaviour
     public BoxCollider exitDoor;
 
     private int timerDamage;
+    private float totalLife;
 
     private void Awake()
     {
@@ -51,7 +52,8 @@ public class PlayerMovement : MonoBehaviour
     {
         UIController.instance.UpdateLifePlayer(lifePlayer);
         UIController.instance.UpdateAmountBullet(amountBullet);
-        
+        totalLife = lifePlayer;
+
     }
 
 
@@ -122,7 +124,6 @@ public class PlayerMovement : MonoBehaviour
             {
                 Gamecontroller.instance.fullKey = true;
                 Gamecontroller.instance.OpenDoor();
-                Debug.Log("Se dejo de crear mas llaves");
             }
 
             audioSourcePlayer.volume = 0.7f;
@@ -133,8 +134,13 @@ public class PlayerMovement : MonoBehaviour
 
         if (other.CompareTag("exitdoor") && Gamecontroller.instance.amountsKey >= Gamecontroller.instance.totalAmountKeys)
         {
-            Debug.Log("Terminaste el juego");
             Gamecontroller.instance.finishGame = true;
+            Gamecontroller.instance.audioSourceGameController.volume = 0f;
+        }
+
+        if (other.CompareTag("Bomb"))
+        {
+            UIController.instance.ActiveBloodPanel(true);
         }
     }
 
@@ -146,7 +152,7 @@ public class PlayerMovement : MonoBehaviour
             if (timerDamage > 10)
             {
                 lifePlayer--;
-                UIController.instance.UpdateLifePlayer(lifePlayer);
+                UpdateLifePlayerToUI();
                 UIController.instance.ActiveBloodPanel(true);
 
                 if (lifePlayer <= 0)
@@ -154,6 +160,25 @@ public class PlayerMovement : MonoBehaviour
                     UIController.instance.ActivePanelFinishGame();
                     Gamecontroller.instance.finishGame = true;
                     gameObject.GetComponent<PlayerMovement>().enabled = false;
+                }
+                timerDamage = 0;
+            }
+        }
+
+        if (other.CompareTag("Bomb"))
+        {
+            timerDamage++;
+            if (timerDamage > 10)
+            {
+                lifePlayer -= 5;
+                Debug.Log("menos 5");
+                UpdateLifePlayerToUI();
+
+                if (lifePlayer <= 0)
+                {
+                    UIController.instance.ActivePanelFinishGame();
+                    Gamecontroller.instance.finishGame = true;
+
                 }
                 timerDamage = 0;
             }
@@ -166,6 +191,17 @@ public class PlayerMovement : MonoBehaviour
         {
             UIController.instance.ActiveBloodPanel(false);
         }
+
+        if (other.CompareTag("Bomb"))
+        {
+            UIController.instance.ActiveBloodPanel(false);
+        }
+    }
+
+    void UpdateLifePlayerToUI()
+    {
+        float x = (1 * lifePlayer) / totalLife;
+        UIController.instance.UpdateLifePlayer(x);
     }
 
 }
