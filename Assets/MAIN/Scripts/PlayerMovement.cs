@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -42,6 +43,9 @@ public class PlayerMovement : MonoBehaviour
 
     private int timerDamage;
     private float totalLife;
+    public PlayerInput controllers;
+    public InputAction moveAction;
+    public InputAction shootAction;
 
     private void Awake()
     {
@@ -53,6 +57,8 @@ public class PlayerMovement : MonoBehaviour
         UIController.instance.UpdateLifePlayer(lifePlayer);
         UIController.instance.UpdateAmountBullet(amountBullet);
         totalLife = lifePlayer;
+        moveAction = controllers.actions["move"];
+        shootAction = controllers.actions["shoot"];
 
     }
 
@@ -61,6 +67,11 @@ public class PlayerMovement : MonoBehaviour
     {
         float x = Input.GetAxis("Horizontal");
         float z = Input.GetAxis("Vertical");
+
+        //var m = moveAction.ReadValue<Vector2>();
+
+        //float x = m.x;
+        //float z = m.y;
 
         Vector3 move = transform.right * x + transform.forward * z;
 
@@ -81,8 +92,10 @@ public class PlayerMovement : MonoBehaviour
         //{
         //    velocity.y = Mathf.Sqrt(jumpingHeight * -2 * gravity);
         //}
+        // if (Input.GetMouseButtonDown(0) && amountBullet > 0)
+        var shootPressButton = shootAction.WasPressedThisFrame();
 
-        if (Input.GetMouseButtonDown(0) && amountBullet > 0)
+        if (shootPressButton && amountBullet > 0)
         {
             var bullet = Instantiate(bulletPrefab, shotPoint.position, shotPoint.rotation);
             bullet.GetComponent<Rigidbody>().AddForce(shotPoint.forward * shotForce);
